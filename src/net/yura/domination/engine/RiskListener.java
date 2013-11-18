@@ -2,6 +2,7 @@
 
 package net.yura.domination.engine;
 
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.core.RiskGame;
 
 /**
@@ -12,7 +13,7 @@ import net.yura.domination.engine.core.RiskGame;
 public interface RiskListener {
 
     public void sendMessage(String output, boolean redrawNeeded, boolean repaintNeeded);
-    public void needInput(int s);
+    public void needInput(GameState gameState);
     public void noInput();
     public void setGameStatus(String state);
     public void newGame(boolean t);

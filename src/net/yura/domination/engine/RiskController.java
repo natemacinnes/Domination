@@ -3,6 +3,8 @@
 package net.yura.domination.engine;
 
 import java.util.Vector;
+
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.core.RiskGame;
 
 /**
@@ -68,7 +70,7 @@ public class RiskController {
 	}
     }
 
-    public void needInput(int s) {
+    public void needInput(GameState gameState) {
 
         Object[] arrLocal;
 
@@ -78,7 +80,7 @@ public class RiskController {
 
 	try {
             for (int i = arrLocal.length-1; i>=0; i--)
-                ((RiskListener)arrLocal[i]).needInput(s);
+                ((RiskListener)arrLocal[i]).needInput(gameState);
         }
         catch(Exception ex) {
             RiskUtil.printStackTrace(ex);

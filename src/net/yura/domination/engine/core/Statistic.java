@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class Statistic implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final int numberOfEntries = 13;
 
     private int[] statistics;
 
