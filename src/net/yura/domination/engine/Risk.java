@@ -2785,10 +2785,10 @@ RiskUtil.printStackTrace(e);
                 try {
                         // make a copy
 
-                        javax.crypto.NullCipher nullCipher = new javax.crypto.NullCipher();
+                        //javax.crypto.NullCipher nullCipher = new javax.crypto.NullCipher();
 
                         // @TODO, this will crash on macs
-                        game = (RiskGame) (new javax.crypto.SealedObject( g, nullCipher ).getObject( nullCipher ));
+                        //game = (RiskGame) (new javax.crypto.SealedObject( g, nullCipher ).getObject( nullCipher ));
                         game.loadMap(false, new BufferedReader(new StringReader(map)));
 
                         for (int c=1;c<=RiskGame.MAX_PLAYERS;c++) {
