@@ -9,6 +9,7 @@ import net.yura.domination.engine.ColorUtil;
 import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.core.Player;
 import net.yura.domination.engine.core.RiskGame;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.mapstore.MapChooser;
 import net.yura.domination.mobile.PicturePanel;
 import net.yura.mobile.gui.ActionListener;
@@ -235,7 +236,7 @@ public class MoveDialog extends Frame implements ActionListener,ChangeListener {
 
     public void actionPerformed(String actionCommand) {
 
-        boolean tacmove = myrisk.getGame().getState()==RiskGame.STATE_FORTIFYING;
+        boolean tacmove = myrisk.getGame().getState()==GameState.STATE_FORTIFYING;
 
         if (actionCommand.equals("cancel")) {
             setVisible(false);
@@ -267,9 +268,9 @@ public class MoveDialog extends Frame implements ActionListener,ChangeListener {
     
     private void go(String input) {
 
-        int gameState = myrisk.getGame().getState();
+        GameState gameState = myrisk.getGame().getState();
 
-        if (gameState==RiskGame.STATE_BATTLE_WON || gameState==RiskGame.STATE_FORTIFYING) {
+        if (gameState==GameState.STATE_BATTLE_WON || gameState==GameState.STATE_FORTIFYING) {
 
                 // this hides the dailog
                 setVisible(false);

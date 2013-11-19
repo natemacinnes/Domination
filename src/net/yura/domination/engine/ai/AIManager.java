@@ -6,6 +6,7 @@ import java.util.Map;
 import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.core.RiskGame;
 import net.yura.util.Service;
+import net.yura.domination.engine.core.GameState;
 
 public class AIManager {
 
@@ -60,17 +61,17 @@ public class AIManager {
             String output=null;
 
             switch ( game.getState() ) {
-                    case RiskGame.STATE_TRADE_CARDS:	output = usethisAI.getTrade(); break;
-                    case RiskGame.STATE_PLACE_ARMIES:	output = usethisAI.getPlaceArmies(); break;
-                    case RiskGame.STATE_ATTACKING:	output = usethisAI.getAttack(); break;
-                    case RiskGame.STATE_ROLLING:	output = usethisAI.getRoll(); break;
-                    case RiskGame.STATE_BATTLE_WON:	output = usethisAI.getBattleWon(); break;
-                    case RiskGame.STATE_FORTIFYING:	output = usethisAI.getTacMove(); break;
-                    case RiskGame.STATE_SELECT_CAPITAL:	output = usethisAI.getCapital(); break;
-                    case RiskGame.STATE_DEFEND_YOURSELF:output = usethisAI.getAutoDefendString(); break;
-                    case RiskGame.STATE_END_TURN:	output = "endgo"; break;
+                    case STATE_TRADE_CARDS:	output = usethisAI.getTrade(); break;
+                    case STATE_PLACE_ARMIES:	output = usethisAI.getPlaceArmies(); break;
+                    case STATE_ATTACKING:	output = usethisAI.getAttack(); break;
+                    case STATE_ROLLING:	output = usethisAI.getRoll(); break;
+                    case STATE_BATTLE_WON:	output = usethisAI.getBattleWon(); break;
+                    case STATE_FORTIFYING:	output = usethisAI.getTacMove(); break;
+                    case STATE_SELECT_CAPITAL:	output = usethisAI.getCapital(); break;
+                    case STATE_DEFEND_YOURSELF:output = usethisAI.getAutoDefendString(); break;
+                    case STATE_END_TURN:	output = "endgo"; break;
 
-                    case RiskGame.STATE_GAME_OVER: throw new IllegalStateException("AI error: game is over");
+                    case STATE_GAME_OVER: throw new IllegalStateException("AI error: game is over");
                     default: throw new IllegalStateException("AI error: unknown state "+ game.getState() );
             }
 

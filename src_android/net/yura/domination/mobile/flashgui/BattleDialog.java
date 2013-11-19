@@ -7,6 +7,7 @@ import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.core.RiskGame;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.mapstore.MapChooser;
 import net.yura.domination.mapstore.MapRenderer;
 import net.yura.mobile.gui.ActionListener;
@@ -94,9 +95,9 @@ public class BattleDialog extends Frame implements ActionListener {
 
     private void go(String input) {
         
-        int gameState = myrisk.getGame().getState();
+        GameState gameState = myrisk.getGame().getState();
         
-        if (gameState==RiskGame.STATE_ROLLING || gameState==RiskGame.STATE_DEFEND_YOURSELF) {
+        if (gameState==GameState.STATE_ROLLING || gameState==GameState.STATE_DEFEND_YOURSELF) {
 
                 //this does not close it, just resets its params
                 blockInput();

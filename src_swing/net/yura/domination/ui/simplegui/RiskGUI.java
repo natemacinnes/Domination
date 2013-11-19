@@ -44,6 +44,7 @@ import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.RiskAdapter;
 import net.yura.domination.engine.RiskUIUtil;
 import net.yura.domination.engine.RiskUtil;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.guishared.AboutDialog;
 import net.yura.domination.engine.guishared.PicturePanel;
 import net.yura.domination.engine.guishared.RiskFileFilter;
@@ -136,7 +137,7 @@ public class RiskGUI extends JFrame implements MouseInputListener {
 			 * checks if the the frame needs input
 			 * @param s determines what needs input
 			 */
-			public void needInput(int s) {
+			public void needInput(GameState s) {
 
 				Submit.setEnabled(true);
 				Command.setEnabled(true);

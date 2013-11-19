@@ -11,6 +11,7 @@ import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.RiskAdapter;
 import net.yura.domination.engine.RiskUIUtil;
 import net.yura.domination.engine.RiskUtil;
+import net.yura.domination.engine.core.GameState;
 
 /**
  * <p> Command Line Interface for Risk </p>
@@ -53,11 +54,11 @@ public class CommandText extends Thread {
 	     * checks if the the frame needs input 
 	     * @param s determines what needs input
 	     */
-	    public void needInput(int s) {
+	    public void needInput(GameState s) {
 
-		synchronized(CommandText.this) {
-		    CommandText.this.notify();
-		}
+			synchronized(CommandText.this) {
+			    CommandText.this.notify();
+			}
 
 	    }
 

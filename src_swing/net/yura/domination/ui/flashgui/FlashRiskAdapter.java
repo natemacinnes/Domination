@@ -11,6 +11,7 @@ import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.RiskListener;
 import net.yura.domination.engine.RiskUIUtil;
 import net.yura.domination.engine.core.Country;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.core.RiskGame;
 import net.yura.domination.engine.guishared.PicturePanel;
 
@@ -121,14 +122,14 @@ public class FlashRiskAdapter implements RiskListener {
 	 * checks if the the frame needs input
 	 * @param s determines what needs input
 	 */
-	public void needInput(int s) {
+	public void needInput(GameState s) {
 		if ( gameFrame.isVisible() ) {
                         gameFrame.needInput(s);
                     
-			if (s == RiskGame.STATE_ROLLING) {
+			if (s == GameState.STATE_ROLLING) {
 				battledialog.needInput(myrisk.getGame().getNoAttackDice(), true);
 			}
-			else if (s == RiskGame.STATE_DEFEND_YOURSELF) {
+			else if (s == GameState.STATE_DEFEND_YOURSELF) {
 				battledialog.needInput(myrisk.getGame().getNoDefendDice(), false);
 			}
 		}

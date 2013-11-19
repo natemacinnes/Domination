@@ -28,6 +28,7 @@ import net.yura.domination.engine.RiskUIUtil;
 import net.yura.domination.engine.RiskUtil;
 import net.yura.domination.engine.core.Card;
 import net.yura.domination.engine.core.Country;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.core.Player;
 import net.yura.domination.engine.core.RiskGame;
 import net.yura.domination.engine.translation.TranslationBundle;
@@ -85,7 +86,7 @@ public class PicturePanel extends JPanel implements MapPanel {
 
         protected void processMouseEvent(MouseEvent e) {
             super.processMouseEvent(e);
-            if (e.getID() == MouseEvent.MOUSE_CLICKED && myrisk.getGame().getState() == RiskGame.STATE_GAME_OVER ) {
+            if (e.getID() == MouseEvent.MOUSE_CLICKED && myrisk.getGame().getState() == GameState.STATE_GAME_OVER ) {
                 // toggle the animation
                 if (ballWorld==null) {
                     startAni();
@@ -279,7 +280,7 @@ public class PicturePanel extends JPanel implements MapPanel {
                                 drawHighLightImage(g2, cc);
                         }
 
-                        if (myrisk.getGame().getState()==RiskGame.STATE_TRADE_CARDS && myrisk.showHumanPlayerThereInfo()) {
+                        if (myrisk.getGame().getState()==GameState.STATE_TRADE_CARDS && myrisk.showHumanPlayerThereInfo()) {
                             Player me = myrisk.getGame().getCurrentPlayer();
                             List<Card> cards = me.getCards();
                             for (Card card:cards) {
@@ -346,11 +347,11 @@ public class PicturePanel extends JPanel implements MapPanel {
 
 		Country[] v = game.getCountries();
 
-                int state = game.getState();
+                GameState state = game.getState();
 
                 int r = BALL_SIZE/2;
 
-		if (state==RiskGame.STATE_ROLLING || state==RiskGame.STATE_BATTLE_WON || state==RiskGame.STATE_DEFEND_YOURSELF) {
+		if (state==GameState.STATE_ROLLING || state==GameState.STATE_BATTLE_WON || state==GameState.STATE_DEFEND_YOURSELF) {
 
 			int a=game.getAttacker().getColor();
 			int b=game.getDefender().getColor();
@@ -387,7 +388,7 @@ public class PicturePanel extends JPanel implements MapPanel {
 
                 if (oldState != state) { // if the state has changed!!!
                     oldState = state;
-                    if (state == RiskGame.STATE_GAME_OVER) {
+                    if (state == GameState.STATE_GAME_OVER) {
                         startAni();
                     }
                     else {
@@ -435,7 +436,7 @@ public class PicturePanel extends JPanel implements MapPanel {
 
                 }
 
-		if (game.getGameMode() == RiskGame.MODE_CAPITAL && game.getSetupDone() && state !=RiskGame.STATE_SELECT_CAPITAL ) {
+		if (game.getGameMode() == RiskGame.MODE_CAPITAL && game.getSetupDone() && state !=GameState.STATE_SELECT_CAPITAL ) {
 
                         int stroke = BALL_SIZE / 10;
 
@@ -483,7 +484,7 @@ public class PicturePanel extends JPanel implements MapPanel {
 	}
 
         BallWorld ballWorld;
-        int oldState;
+        GameState oldState;
 
         public void startAni() {
             if (ballWorld==null) {

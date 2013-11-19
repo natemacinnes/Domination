@@ -7,6 +7,7 @@ import javax.microedition.lcdui.Graphics;
 import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.RiskAdapter;
 import net.yura.domination.engine.RiskUtil;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.mobile.MiniUtil;
 import net.yura.domination.mobile.PicturePanel;
 import net.yura.mobile.gui.ActionListener;
@@ -169,7 +170,7 @@ public class GameFrame extends Frame {
                      * checks if the the frame needs input
                      * @param s determines what needs input
                      */
-                    public void needInput(int s) {
+                    public void needInput(GameState s) {
 
                             Submit.setFocusable(true);
                             Command.setFocusable(true);
