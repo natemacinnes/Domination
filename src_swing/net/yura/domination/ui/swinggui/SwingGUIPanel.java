@@ -75,6 +75,7 @@ import net.yura.domination.engine.RiskAdapter;
 import net.yura.domination.engine.RiskUIUtil;
 import net.yura.domination.engine.RiskUtil;
 import net.yura.domination.engine.core.Continent;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.core.RiskGame;
 import net.yura.domination.engine.core.StatType;
 import net.yura.domination.engine.guishared.BadgeButton;
@@ -106,7 +107,7 @@ public class SwingGUIPanel extends JPanel implements ActionListener{
 
 	private Risk myrisk;
 
-	private int gameState;
+	private GameState gameState;
 	private boolean localGame;
 
 	private JTabbedPane tabbedpane;
@@ -185,7 +186,7 @@ public class SwingGUIPanel extends JPanel implements ActionListener{
 		myrisk= r;
 
 		//c1Id = -1;
-		gameState=-1; // (-1 means no game)
+		gameState= GameState.STATE_NOTHING_GOING_ON_HERE; // (-1 means no game)
 
 
 
@@ -1321,7 +1322,7 @@ class GameTab extends JPanel implements SwingGUITab, ActionListener {
 		if (localGame) {
 			gSaveGame.setEnabled(true);
 			gmSaveGame.setEnabled(true);
-                        if (myrisk.getGame().getState()!=RiskGame.STATE_DEFEND_YOURSELF) {
+                        if (myrisk.getGame().getState()!=GameState.STATE_DEFEND_YOURSELF) {
                             Undo.setEnabled(true);
                         }
 			gmReplay.setEnabled(true);
@@ -1915,7 +1916,7 @@ class StatisticsTab extends JPanel implements SwingGUITab,ActionListener {
 		pp.setHighLight(PicturePanel.NO_COUNTRY);
 		// Testing.append("Submitted: \""+input+"\"\n");
 
-		if (gameState!=2 || !myrisk.getGame().getSetupDone() ) { blockInput(); }
+		if (gameState!=GameState.STATE_PLACE_ARMIES  || !myrisk.getGame().getSetupDone() ) { blockInput(); }
 
 		myrisk.parser(input);
 
@@ -1928,7 +1929,7 @@ class StatisticsTab extends JPanel implements SwingGUITab,ActionListener {
 	 */
 	public void blockInput() {
 
-		gameState= -1;
+		gameState= gameState.STATE_NOTHING_GOING_ON_HERE;
 
 		inGameCards.show(inGameInput, "nothing");
 
@@ -1980,7 +1981,7 @@ class StatisticsTab extends JPanel implements SwingGUITab,ActionListener {
 
 		Frame frame = RiskUIUtil.findParentFrame(this);
 
-		CardsDialog cardsDialog = new CardsDialog( frame ,pp, true, myrisk , (gameState==1) );
+		CardsDialog cardsDialog = new CardsDialog( frame ,pp, true, myrisk , (gameState==GameState.STATE_TRADE_CARDS) );
 		Dimension frameSize = frame.getSize();
 		Dimension aboutSize = cardsDialog.getPreferredSize();
 		int x = frame.getLocation().x + (frameSize.width - aboutSize.width) / 2;
@@ -2106,18 +2107,18 @@ class StatisticsTab extends JPanel implements SwingGUITab,ActionListener {
 		 * checks if the the frame needs input
 		 * @param s determines what needs input
 		 */
-		public void needInput(int s) {
+		public void needInput(GameState s) {
 
 			gameState=s;
 
-			if (gameState != -1 && gameState!=RiskGame.STATE_NEW_GAME) {
+			if (gameState != GameState.STATE_NOTHING_GOING_ON_HERE && gameState!=GameState.STATE_NEW_GAME) {
 				gameTab.getInput();
 			}
 
-			if (gameState == RiskGame.STATE_NEW_GAME) {
+			if (gameState == GameState.STATE_NEW_GAME) {
 				inGameCards.show(inGameInput, "nothing");
 			}
-			else if (gameState == RiskGame.STATE_TRADE_CARDS) {
+			else if (gameState == GameState.STATE_TRADE_CARDS) {
 
 				// after wiping out someone if you go into trade mode
 				pp.setC1(PicturePanel.NO_COUNTRY);
@@ -2128,12 +2129,12 @@ class StatisticsTab extends JPanel implements SwingGUITab,ActionListener {
                                 armiesLeft( myrisk.getGame().getCurrentPlayer().getExtraArmies() , myrisk.getGame().NoEmptyCountries() );
 				inGameCards.show(inGameInput, "tradeCards");
 			}
-			else if (gameState == RiskGame.STATE_PLACE_ARMIES) {
+			else if (gameState == GameState.STATE_PLACE_ARMIES) {
 
                                 armiesLeft( myrisk.getGame().getCurrentPlayer().getExtraArmies() , myrisk.getGame().NoEmptyCountries() );
 				inGameCards.show(inGameInput, "placeArmies");
 			}
-			else if (gameState == RiskGame.STATE_ATTACKING) {
+			else if (gameState == GameState.STATE_ATTACKING) {
 
                                 pp.setC1(PicturePanel.NO_COUNTRY);
                                 pp.setC2(PicturePanel.NO_COUNTRY);
@@ -2141,11 +2142,11 @@ class StatisticsTab extends JPanel implements SwingGUITab,ActionListener {
 
 				inGameCards.show(inGameInput, "attack");
 			}
-			else if (gameState == RiskGame.STATE_ROLLING) {
+			else if (gameState == GameState.STATE_ROLLING) {
                                 showDice(myrisk.getGame().getNoAttackDice(), true);
 				inGameCards.show(inGameInput, "roll");
 			}
-			else if (gameState == RiskGame.STATE_BATTLE_WON) {
+			else if (gameState == GameState.STATE_BATTLE_WON) {
 
                                 int min = myrisk.getGame().getMustMove();
                             	int max = myrisk.hasArmiesInt( myrisk.getGame().getAttacker().getColor() ) -1;
@@ -2155,22 +2156,22 @@ class StatisticsTab extends JPanel implements SwingGUITab,ActionListener {
 
 				inGameCards.show(inGameInput, "move");
 			}
-			else if (gameState == RiskGame.STATE_FORTIFYING) {
+			else if (gameState == GameState.STATE_FORTIFYING) {
 				inGameCards.show(inGameInput, "tacMove");
 			}
-			else if (gameState == RiskGame.STATE_END_TURN) {
+			else if (gameState == GameState.STATE_END_TURN) {
 				inGameCards.show(inGameInput, "endgo");
 			}
-			else if (gameState == RiskGame.STATE_GAME_OVER) {
+			else if (gameState == GameState.STATE_GAME_OVER) {
 
                                 winner.continueButton.setVisible( myrisk.getGame().canContinue() );
 
 				inGameCards.show(inGameInput, "winner");
 			}
-			else if (gameState == RiskGame.STATE_SELECT_CAPITAL) {
+			else if (gameState == GameState.STATE_SELECT_CAPITAL) {
 				inGameCards.show(inGameInput, "capital");
 			}
-			else if (gameState == RiskGame.STATE_DEFEND_YOURSELF) {
+			else if (gameState == GameState.STATE_DEFEND_YOURSELF) {
                                 showDice(myrisk.getGame().getNoDefendDice(), false);
 				inGameCards.show(inGameInput, "defend");
 			}
@@ -2629,7 +2630,7 @@ public void setNODDefender(int n) {}
 
 		public void mapClick(int[] countries,MouseEvent e) {
 
-                    if (gameState == RiskGame.STATE_PLACE_ARMIES) {
+                    if (gameState == GameState.STATE_PLACE_ARMIES) {
                         if (countries.length==1) {
                             if ( e.getModifiers() == java.awt.event.InputEvent.BUTTON1_MASK ) {
                                 go( "placearmies " + countries[0] + " 1" );
@@ -2639,7 +2640,7 @@ public void setNODDefender(int n) {}
                             }
                         }
                     }
-                    else if (gameState == RiskGame.STATE_ATTACKING) {
+                    else if (gameState == GameState.STATE_ATTACKING) {
                             if (countries.length==0) {
                                 attacker.setText(resbundle.getString("game.note.selectattacker"));
                             }
@@ -2651,7 +2652,7 @@ public void setNODDefender(int n) {}
                             }
 
                     }
-                    else if (gameState == RiskGame.STATE_FORTIFYING) {
+                    else if (gameState == GameState.STATE_FORTIFYING) {
                             if (countries.length==0) {
                                     country1.setText("");
                             }
@@ -2663,7 +2664,7 @@ public void setNODDefender(int n) {}
                                     country2.setText( myrisk.getCountryName( countries[1]) );
                             }
                     }
-                    else if (gameState == RiskGame.STATE_SELECT_CAPITAL) {
+                    else if (gameState == GameState.STATE_SELECT_CAPITAL) {
                             if (countries.length==0) {
                                 capitalLabel.setText( resbundle.getString("core.help.selectcapital") );
                             }

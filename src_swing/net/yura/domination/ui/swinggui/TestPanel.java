@@ -35,6 +35,7 @@ import net.yura.domination.engine.ai.AIManager;
 import net.yura.domination.engine.core.Card;
 import net.yura.domination.engine.core.Continent;
 import net.yura.domination.engine.core.Country;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.core.Player;
 import net.yura.domination.engine.core.RiskGame;
 import net.yura.domination.engine.guishared.PicturePanel;
@@ -535,7 +536,7 @@ public class TestPanel extends JPanel implements ActionListener, SwingGUITab {
 		}
 		else if (a.getActionCommand().equals("allcards")) {
 
-			if (myrisk.getGame()!=null && myrisk.getGame().getState()!=RiskGame.STATE_NEW_GAME && myrisk.getGame().getCards()!=null) {
+			if (myrisk.getGame()!=null && myrisk.getGame().getState()!=GameState.STATE_NEW_GAME && myrisk.getGame().getCards()!=null) {
 
 				Frame frame = RiskUIUtil.findParentFrame(this);
 

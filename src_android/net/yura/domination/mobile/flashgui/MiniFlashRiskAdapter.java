@@ -6,6 +6,7 @@ import net.yura.domination.engine.RiskListener;
 import net.yura.domination.engine.RiskUtil;
 import net.yura.domination.engine.core.Player;
 import net.yura.domination.engine.core.RiskGame;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.lobby.mini.MiniLobbyRisk;
 import net.yura.mobile.gui.ActionListener;
 import net.yura.mobile.gui.Icon;
@@ -174,11 +175,11 @@ public class MiniFlashRiskAdapter implements RiskListener {
 
     MoveDialog move;
     @Override
-    public void needInput(int s) {
+    public void needInput(GameState s) {
 
         // if for some strange reason this dialog is open and we need some other input, close it
         // this can happen if we timeout in a game during battle won move stage
-        if (s!=RiskGame.STATE_BATTLE_WON && move!=null && move.isVisible()) {
+        if (s!=GameState.STATE_BATTLE_WON && move!=null && move.isVisible()) {
             move.setVisible(false);
         }
 
@@ -186,13 +187,13 @@ public class MiniFlashRiskAdapter implements RiskListener {
                 gameFrame.needInput(s);
 
                 switch(s) {
-                    case RiskGame.STATE_ROLLING:
+                    case STATE_ROLLING:
                         battle.needInput(myRisk.getGame().getNoAttackDice(), true);
                         break;
-                    case RiskGame.STATE_DEFEND_YOURSELF:
+                    case STATE_DEFEND_YOURSELF:
                         battle.needInput(myRisk.getGame().getNoDefendDice(), false);
                         break;
-                    case RiskGame.STATE_BATTLE_WON:
+                    case STATE_BATTLE_WON:
                         if (move==null) {
                             move = new MoveDialog(myRisk) {
                                 @Override

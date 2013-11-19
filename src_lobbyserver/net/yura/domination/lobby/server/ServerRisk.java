@@ -2,6 +2,7 @@ package net.yura.domination.lobby.server;
 
 import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.core.RiskGame;
+import net.yura.domination.engine.core.GameState;
 
 public class ServerRisk extends Risk {
 
@@ -82,7 +83,7 @@ public class ServerRisk extends Risk {
 			synchronized(this) {
 
 				// dont go on if this is in catch all and dont run mode!!!!!
-				while ( inbox.isEmpty() || (paused && game.getState()!=RiskGame.STATE_NEW_GAME ) ) {
+				while ( inbox.isEmpty() || (paused && game.getState()!=GameState.STATE_NEW_GAME ) ) {
 
 					waiting=true;
 
@@ -105,7 +106,7 @@ public class ServerRisk extends Risk {
 	public void inGameParser(String mem) {
 		//if not all players hit start and the game is started, just store the commands, do not run them
 		// stick risk into paused mode
-		if ( paused && game.getState()!=RiskGame.STATE_NEW_GAME ) {
+		if ( paused && game.getState()!=GameState.STATE_NEW_GAME ) {
 			inbox.add(mem);
 			return;
 		}

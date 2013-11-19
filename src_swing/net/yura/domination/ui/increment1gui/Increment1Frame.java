@@ -34,6 +34,7 @@ import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.RiskAdapter;
 import net.yura.domination.engine.RiskUIUtil;
 import net.yura.domination.engine.RiskUtil;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.guishared.AboutDialog;
 
 /**
@@ -642,7 +643,7 @@ class Increment1RiskAdapter extends RiskAdapter {
      * checks if the the frame needs input 
      * @param s determines what needs input
      */
-    public void needInput(int s) {
+    public void needInput(GameState s) {
 
 	Submit.setEnabled(true);
 	Command.setEnabled(true);

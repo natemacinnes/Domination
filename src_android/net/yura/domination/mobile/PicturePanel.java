@@ -20,6 +20,7 @@ import net.yura.domination.engine.core.Card;
 import net.yura.domination.engine.core.Country;
 import net.yura.domination.engine.core.Player;
 import net.yura.domination.engine.core.RiskGame;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.guishared.MapPanel;
 import net.yura.domination.engine.translation.TranslationBundle;
 import net.yura.domination.mapstore.MapChooser;
@@ -111,7 +112,7 @@ public class PicturePanel extends ImageView implements MapPanel {
                             ml.click(x,y);
                         }
 
-                        if (myrisk.getGame().getState() == RiskGame.STATE_GAME_OVER ) {
+                        if (myrisk.getGame().getState() == GameState.STATE_GAME_OVER ) {
                             // toggle the animation
                             if (ballWorld==null) {
                                 startAni();
@@ -376,9 +377,9 @@ public class PicturePanel extends ImageView implements MapPanel {
                         }
 
                         RiskGame game = myrisk.getGame();
-                        int state = game.getState();
+                        GameState state = game.getState();
 
-                        if (state==RiskGame.STATE_TRADE_CARDS && myrisk.showHumanPlayerThereInfo()) {
+                        if (state==GameState.STATE_TRADE_CARDS && myrisk.showHumanPlayerThereInfo()) {
                             Player me = myrisk.getGame().getCurrentPlayer();
                             List<Card> cards = me.getCards();
                             for (Card card:cards) {
@@ -389,7 +390,7 @@ public class PicturePanel extends ImageView implements MapPanel {
                             }
                         }
 
-                        if (state==RiskGame.STATE_ROLLING || state==RiskGame.STATE_BATTLE_WON || state==RiskGame.STATE_DEFEND_YOURSELF) {
+                        if (state==GameState.STATE_ROLLING || state==GameState.STATE_BATTLE_WON || state==GameState.STATE_DEFEND_YOURSELF) {
                                 Country attacker = game.getAttacker();
                                 Country defender = game.getDefender();
                                 if (attacker!=null && defender!=null) {
@@ -432,12 +433,12 @@ public class PicturePanel extends ImageView implements MapPanel {
          */
         public void drawArmies(Graphics2D g2,double scale) {
                 RiskGame game = myrisk.getGame();
-                int state = game.getState();
+                GameState state = game.getState();
 
                 int ballSize = (int)(BALL_SIZE*scale);
                 Country[] v = game.getCountries();
 
-                if (state==RiskGame.STATE_ROLLING || state==RiskGame.STATE_BATTLE_WON || state==RiskGame.STATE_DEFEND_YOURSELF) {
+                if (state==GameState.STATE_ROLLING || state==GameState.STATE_BATTLE_WON || state==GameState.STATE_DEFEND_YOURSELF) {
 
                         DirectGraphics g = DirectUtils.getDirectGraphics(g2.getGraphics());
 
@@ -474,7 +475,7 @@ public class PicturePanel extends ImageView implements MapPanel {
 
                 if (oldState != state) { // if the state has changed!!!
                     oldState = state;
-                    if (state == RiskGame.STATE_GAME_OVER) {
+                    if (state == GameState.STATE_GAME_OVER) {
                         startAni();
                     }
                     else {
@@ -484,7 +485,7 @@ public class PicturePanel extends ImageView implements MapPanel {
 
 
                 Map<Country,Player> capitals = Collections.EMPTY_MAP;
-                if (game.getGameMode() == RiskGame.MODE_CAPITAL && game.getSetupDone() && game.getState() != RiskGame.STATE_SELECT_CAPITAL ) {
+                if (game.getGameMode() == RiskGame.MODE_CAPITAL && game.getSetupDone() && game.getState() != GameState.STATE_SELECT_CAPITAL ) {
                     capitals = new HashMap(game.getNoPlayers());
                     List<Player> players = game.getPlayers();
                     for (int c=0; c<players.size(); c++) {
@@ -580,7 +581,7 @@ public class PicturePanel extends ImageView implements MapPanel {
         }
 
         BallWorld ballWorld;
-        int oldState;
+        GameState oldState;
 
         public void startAni() {
             if (ballWorld==null) {

@@ -11,6 +11,7 @@ import javax.microedition.lcdui.Image;
 import net.yura.domination.engine.Risk;
 import net.yura.domination.engine.RiskUtil;
 import net.yura.domination.engine.core.RiskGame;
+import net.yura.domination.engine.core.GameState;
 import net.yura.domination.engine.guishared.MapMouseListener;
 import net.yura.domination.engine.translation.TranslationBundle;
 import net.yura.domination.mobile.MiniUtil;
@@ -68,7 +69,7 @@ public class GameActivity extends Frame implements ActionListener {
     Button note,gobutton,closebutton,savebutton,undobutton,graphbutton;
 
     String status;
-    int gameState;
+    GameState gameState;
 
     private CheckBox AutoEndGo,AutoDefend;
     private Button cardsbutton,missionbutton,options;
@@ -94,7 +95,7 @@ public class GameActivity extends Frame implements ActionListener {
         pp.addMouseListener(
             new MouseListener() {
                 public void click(int x,int y) {
-                    if (gameState == RiskGame.STATE_TRADE_CARDS) {
+                    if (gameState == GameState.STATE_TRADE_CARDS) {
                         openCards();
                     }
                     else {
@@ -526,7 +527,7 @@ public class GameActivity extends Frame implements ActionListener {
                 }
             }
         };
-        cardsDialog.setup( (gameState==RiskGame.STATE_TRADE_CARDS) );
+        cardsDialog.setup( (gameState==GameState.STATE_TRADE_CARDS) );
         cardsDialog.setVisible(true);
     }
 
@@ -575,13 +576,13 @@ public class GameActivity extends Frame implements ActionListener {
     /**
      * @see net.yura.domination.ui.flashgui.GameFrame#needInput(int)
      */
-    public void needInput(int s) {
+    public void needInput(GameState s) {
             gameState=s;
             String goButtonText=null;
             String noteText=null;
             boolean mustTrade=false;
             switch (gameState) {
-                    case RiskGame.STATE_TRADE_CARDS: {
+                    case STATE_TRADE_CARDS: {
                             // after wiping out someone if you go into trade mode
                             pp.setC1(255);
                             pp.setC2(255);
@@ -594,30 +595,30 @@ public class GameActivity extends Frame implements ActionListener {
                             }
                             break;
                     }
-                    case RiskGame.STATE_PLACE_ARMIES: {
+                    case STATE_PLACE_ARMIES: {
                             if ( !myrisk.getGame().NoEmptyCountries() ) {
                                     goButtonText = resb.getProperty("game.button.go.autoplace");
                             }
                             noteText = getArmiesLeftText();
                             break;
                     }
-                    case RiskGame.STATE_ATTACKING: {
+                    case STATE_ATTACKING: {
                             pp.setC1(255);
                             pp.setC2(255);
                             noteText = resb.getProperty("game.note.selectattacker");
                             goButtonText = resb.getProperty("game.button.go.endattack");
                             break;
                     }
-                    case RiskGame.STATE_FORTIFYING: {
+                    case STATE_FORTIFYING: {
                             noteText = resb.getProperty("game.note.selectsource");
                             goButtonText = resb.getProperty("game.button.go.nomove");
                             break;
                     }
-                    case RiskGame.STATE_END_TURN: {
+                    case STATE_END_TURN: {
                             goButtonText = resb.getProperty("game.button.go.endgo");
                             break;
                     }
-                    case RiskGame.STATE_GAME_OVER: {
+                    case STATE_GAME_OVER: {
                             if (myrisk.getGame().canContinue()) {
                                 goButtonText = resb.getProperty("game.button.go.continue");
                             }
@@ -632,7 +633,7 @@ public class GameActivity extends Frame implements ActionListener {
                             }
                             break;
                     }
-                    case RiskGame.STATE_SELECT_CAPITAL: {
+                    case STATE_SELECT_CAPITAL: {
                             noteText = resb.getProperty("core.help.selectcapital");
                             goButtonText = null;
                             break;
@@ -648,7 +649,7 @@ public class GameActivity extends Frame implements ActionListener {
 
             cardsbutton.setName(mustTrade?"MustTradeButton":"CardsButton");
 
-            if (gameState!=RiskGame.STATE_DEFEND_YOURSELF) {
+            if (gameState!=GameState.STATE_DEFEND_YOURSELF) {
                     cardsbutton.setFocusable(true);
 
                     if (localGame) {
@@ -698,24 +699,24 @@ public class GameActivity extends Frame implements ActionListener {
     }
 
     private void goOn() {
-            if (gameState==RiskGame.STATE_TRADE_CARDS) {
+            if (gameState==GameState.STATE_TRADE_CARDS) {
                     go("endtrade");
             }
-            else if (gameState==RiskGame.STATE_PLACE_ARMIES) {
+            else if (gameState==GameState.STATE_PLACE_ARMIES) {
                     go("autoplace");
             }
-            else if (gameState==RiskGame.STATE_ATTACKING) {
+            else if (gameState==GameState.STATE_ATTACKING) {
                     pp.setC1(255);
                     go("endattack");
             }
-            else if (gameState==RiskGame.STATE_FORTIFYING) {
+            else if (gameState==GameState.STATE_FORTIFYING) {
                     pp.setC1(255);
                     go("nomove");
             }
-            else if (gameState==RiskGame.STATE_END_TURN) {
+            else if (gameState==GameState.STATE_END_TURN) {
                     go("endgo");
             }
-            else if (gameState==RiskGame.STATE_GAME_OVER) {
+            else if (gameState==GameState.STATE_GAME_OVER) {
                     if (myrisk.getGame().canContinue()) {
                         go("continue");
                     }
@@ -723,7 +724,7 @@ public class GameActivity extends Frame implements ActionListener {
                         go("closegame");
                     }
             }
-            else if (gameState == RiskGame.STATE_SELECT_CAPITAL) {
+            else if (gameState == GameState.STATE_SELECT_CAPITAL) {
                     int c1Id = pp.getC1();
                     pp.setC1(255);
                     go("capital " + c1Id);
@@ -734,7 +735,7 @@ public class GameActivity extends Frame implements ActionListener {
 
         pp.setHighLight(255);
 
-        if (gameState!=RiskGame.STATE_PLACE_ARMIES || !myrisk.getGame().getSetupDone() ) { noInput(); }
+        if (gameState!=GameState.STATE_PLACE_ARMIES || !myrisk.getGame().getSetupDone() ) { noInput(); }
 
         myrisk.parser(input);
 
@@ -757,7 +758,7 @@ public class GameActivity extends Frame implements ActionListener {
 
             note.setText( resb.getString("game.pleasewait") );
 
-            gameState=0;
+            gameState=GameState.STATE_NOTHING_GOING_ON_HERE;
 
             repaint();
     }
@@ -766,7 +767,7 @@ public class GameActivity extends Frame implements ActionListener {
 
     public void mapClick(int[] countries) {
 
-        if (gameState == RiskGame.STATE_PLACE_ARMIES) {
+        if (gameState == GameState.STATE_PLACE_ARMIES) {
             if (countries.length==1) {
                 //if ( e.getModifiers() == java.awt.event.InputEvent.BUTTON1_MASK ) {
                     go( "placearmies " + countries[0] + " 1" );
@@ -777,7 +778,7 @@ public class GameActivity extends Frame implements ActionListener {
                 //}
             }
         }
-        else if (gameState == RiskGame.STATE_ATTACKING) {
+        else if (gameState == GameState.STATE_ATTACKING) {
 
             if (countries.length==0) {
                 note.setText( resb.getProperty("game.note.selectattacker") );
@@ -791,7 +792,7 @@ public class GameActivity extends Frame implements ActionListener {
             }
 
         }
-        else if (gameState == RiskGame.STATE_FORTIFYING) {
+        else if (gameState == GameState.STATE_FORTIFYING) {
             if (countries.length==0) {
                 note.setText( resb.getProperty("game.note.selectsource") );
             }
@@ -823,7 +824,7 @@ public class GameActivity extends Frame implements ActionListener {
 
             }
         }
-        else if (gameState == RiskGame.STATE_SELECT_CAPITAL) {
+        else if (gameState == GameState.STATE_SELECT_CAPITAL) {
             note.setText( resb.getProperty("game.note.happyok") );
             setGoButtonText( resb.getProperty("game.button.go.ok") );
         }
