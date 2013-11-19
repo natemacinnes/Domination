@@ -19,7 +19,7 @@ public class Statistic implements Serializable {
     private int diceCount; // Computing the average of dices requires knowing their count.
 
     public Statistic() {
-	statistics = new int[13];
+    	statistics = new int[13];
     }
     
     public void incrementStatistic(StatType stat, final int incrementBy) {
@@ -53,11 +53,11 @@ public class Statistic implements Serializable {
     }
 
     public void addReinforcements(final int a) {
-	statistics[StatType.REINFORCEMENTS.ordinal()] += a;
+    	statistics[StatType.REINFORCEMENTS.ordinal()] += a;
     }
 
     public void addKill() {
-	statistics[StatType.KILLS.ordinal()]++;
+    	statistics[StatType.KILLS.ordinal()]++;
     }
 
     public void addCasualty() {
