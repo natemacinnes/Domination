@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class Statistic implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    public static final int numberOfStatTypes = StatType.values().length;
 
     private int[] statistics;
 
@@ -19,7 +20,7 @@ public class Statistic implements Serializable {
     private int diceCount; // Computing the average of dices requires knowing their count.
 
     public Statistic() {
-    	statistics = new int[13];
+    	statistics = new int[numberOfStatTypes];
     }
     
     public void incrementStatistic(StatType stat, final int incrementBy) {
@@ -67,15 +68,15 @@ public class Statistic implements Serializable {
         if (statType==StatType.DICE) {
             return dice;
         }
-	return statistics[ statType.ordinal() ];
+        return statistics[ statType.ordinal() ];
     }
 
     // we may have loaded a old game where statistics.length is 12
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        if (statistics.length < 13) {
+        if (statistics.length < numberOfStatTypes) {
             int[] old = statistics;
-            statistics = new int[13];
+            statistics = new int[numberOfStatTypes];
             System.arraycopy(old, 0, statistics, 0, old.length);
         }
     }
