@@ -53,35 +53,35 @@ public class Statistic implements Serializable {
     }
 
     public void addReinforcements(final int a) {
-    	statistics[StatType.REINFORCEMENTS.ordinal()] += a;
+    	incrementStatistic(StatType.REINFORCEMENTS, a);
     }
 
     public void addKill() {
-    	statistics[StatType.KILLS.ordinal()]++;
+    	incrementStatistic(StatType.KILLS, 1);
     }
 
     public void addCasualty() {
-	statistics[StatType.CASUALTIES.ordinal()]++;
+    	incrementStatistic(StatType.CASUALTIES, 1);
     }
 
     public void addAttack() {
-	statistics[StatType.ATTACKS.ordinal()]++;
+    	incrementStatistic(StatType.ATTACKS, 1);
     }
 
     public void addAttacked() {
-	statistics[StatType.ATTACKED.ordinal()]++;
+    	incrementStatistic(StatType.ATTACKED, 1);
     }
 
     public void addRetreat() {
-	statistics[StatType.RETREATS.ordinal()]++;
+    	incrementStatistic(StatType.RETREATS, 1);
     }
 
     public void addCountriesWon() {
-	statistics[StatType.COUNTRIES_WON.ordinal()]++;
+    	incrementStatistic(StatType.COUNTRIES_WON, 1);
     }
 
     public void addCountriesLost() {
-	statistics[StatType.COUNTRIES_LOST.ordinal()]++;
+    	incrementStatistic(StatType.COUNTRIES_LOST, 1);
     }
 
     /**
