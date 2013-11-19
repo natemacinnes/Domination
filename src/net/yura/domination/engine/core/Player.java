@@ -236,15 +236,15 @@ public class Player implements Serializable {
 	// check if you should get extra armies on the territoriesOwned
 	if (territoriesOwned.contains( card1.getCountry() ) ) {
 	    ((Country)card1.getCountry()).addArmies(noaFORcard);
-	    currentStatistic.addReinforcements(noaFORcard);
+	    currentStatistic.incrementStatistic(StatType.REINFORCEMENTS, noaFORcard);
 	}
 	else if (territoriesOwned.contains( card2.getCountry() ) ) {
 	    ((Country)card2.getCountry()).addArmies(noaFORcard);
-	    currentStatistic.addReinforcements(noaFORcard);
+	    currentStatistic.incrementStatistic(StatType.REINFORCEMENTS, noaFORcard);
 	}
 	else if (territoriesOwned.contains( card3.getCountry() ) ) {
 	    ((Country)card3.getCountry()).addArmies(noaFORcard);
-	    currentStatistic.addReinforcements(noaFORcard);
+	    currentStatistic.incrementStatistic(StatType.REINFORCEMENTS, noaFORcard);
 	}
 
 	cardsOwned.remove(card1);

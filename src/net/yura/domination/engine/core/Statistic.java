@@ -52,37 +52,6 @@ public class Statistic implements Serializable {
 */
     }
 
-    public void addReinforcements(final int a) {
-    	incrementStatistic(StatType.REINFORCEMENTS, a);
-    }
-
-    public void addKill() {
-    	incrementStatistic(StatType.KILLS, 1);
-    }
-
-    public void addCasualty() {
-    	incrementStatistic(StatType.CASUALTIES, 1);
-    }
-
-    public void addAttack() {
-    	incrementStatistic(StatType.ATTACKS, 1);
-    }
-
-    public void addAttacked() {
-    	incrementStatistic(StatType.ATTACKED, 1);
-    }
-
-    public void addRetreat() {
-    	incrementStatistic(StatType.RETREATS, 1);
-    }
-
-    public void addCountriesWon() {
-    	incrementStatistic(StatType.COUNTRIES_WON, 1);
-    }
-
-    public void addCountriesLost() {
-    	incrementStatistic(StatType.COUNTRIES_LOST, 1);
-    }
 
     /**
      * Record a dice value.

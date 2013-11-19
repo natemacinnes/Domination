@@ -822,7 +822,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 				// if it has the player as a owner
 				if ( t.getOwner()==currentPlayer && currentPlayer.getExtraArmies() >=n ) {
 
-					currentPlayer.currentStatistic.addReinforcements(n);
+					currentPlayer.currentStatistic.incrementStatistic(StatType.REINFORCEMENTS, n);
 
 					t.addArmies(n);
 					currentPlayer.loseExtraArmy(n);
@@ -917,8 +917,8 @@ transient - A keyword in the Java programming language that indicates that a fie
 					t1.getArmies() > 1
 			) {
 
-				currentPlayer.currentStatistic.addAttack();
-				((Player)t2.getOwner()).currentStatistic.addAttacked();
+				currentPlayer.currentStatistic.incrementStatistic(StatType.ATTACKS, 1);
+				((Player)t2.getOwner()).currentStatistic.incrementStatistic(StatType.ATTACKED, 1);
 
 				result=true;
 
@@ -1047,14 +1047,14 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 				if (attackerResults[c] > defenderResults[c]) {
 					defender.looseArmy();
-					defender.getOwner().currentStatistic.addCasualty();
-					attacker.getOwner().currentStatistic.addKill();
+					defender.getOwner().currentStatistic.incrementStatistic(StatType.CASUALTIES, 1);
+					attacker.getOwner().currentStatistic.incrementStatistic(StatType.KILLS, 1);
 					result[2]++;
 				}
 				else {
 					attacker.looseArmy();
-					attacker.getOwner().currentStatistic.addCasualty();
-					defender.getOwner().currentStatistic.addKill();
+					attacker.getOwner().currentStatistic.incrementStatistic(StatType.CASUALTIES, 1);
+					defender.getOwner().currentStatistic.incrementStatistic(StatType.KILLS, 1);
 					result[1]++;
 				}
 
@@ -1063,8 +1063,8 @@ transient - A keyword in the Java programming language that indicates that a fie
 			// if all the armies have been defeated
 			if (defender.getArmies() == 0) {
 
-				((Player)attacker.getOwner()).currentStatistic.addCountriesWon();
-				((Player)defender.getOwner()).currentStatistic.addCountriesLost();
+				((Player)attacker.getOwner()).currentStatistic.incrementStatistic(StatType.COUNTRIES_WON, 1);
+				((Player)defender.getOwner()).currentStatistic.incrementStatistic(StatType.COUNTRIES_LOST, 1);
 
 				result[5]=attacker.getArmies()-1;
 
@@ -1110,7 +1110,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 			else if (attacker.getArmies() == 1) {
 				gameState=STATE_ATTACKING;
 				//System.out.print("Retreating (FORCED)\n");
-				currentPlayer.currentStatistic.addRetreat();
+				currentPlayer.currentStatistic.incrementStatistic(StatType.RETREATS, 1);
 			}
 			else { gameState=STATE_ROLLING; }
 
@@ -1173,7 +1173,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 		if (gameState==STATE_ROLLING) { // if we were in the attacking phase
 
-			currentPlayer.currentStatistic.addRetreat();
+			currentPlayer.currentStatistic.incrementStatistic(StatType.RETREATS, 1);
 
 			gameState=STATE_ATTACKING; // go to attack phase
 			//System.out.print("Retreating\n");
