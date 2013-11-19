@@ -40,19 +40,6 @@ public class RiskGame implements Serializable { // transient
 	public final static int MAX_PLAYERS = 6;
 	public final static Continent ANY_CONTINENT = new Continent("any","any", 0, 0);
 
-	public final static int STATE_NEW_GAME        = 0;
-	public final static int STATE_TRADE_CARDS     = 1;
-	public final static int STATE_PLACE_ARMIES    = 2;
-	public final static int STATE_ATTACKING       = 3;
-	public final static int STATE_ROLLING         = 4;
-	public final static int STATE_BATTLE_WON      = 5;
-	public final static int STATE_FORTIFYING      = 6;
-	public final static int STATE_END_TURN        = 7;
-	public final static int STATE_GAME_OVER       = 8;
-	public final static int STATE_SELECT_CAPITAL  = 9;
-	public final static int STATE_DEFEND_YOURSELF = 10;
-
-
 	public final static int MODE_DOMINATION     = 0;
 	public final static int MODE_CAPITAL        = 2;
 	public final static int MODE_SECRET_MISSION = 3;
@@ -133,7 +120,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	private Vector Missions;
 
 	private Player currentPlayer;
-	private int gameState;
+	private GameState gameState;
 	private int cardState;
 	private int mustmove;
 	private boolean capturedCountry;
@@ -181,7 +168,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 		Players = new Vector();
 
 		currentPlayer=null;
-		gameState=STATE_NEW_GAME;
+		gameState=GameState.STATE_NEW_GAME;
 		cardState=0;
 
 		replayCommands = new Vector();
@@ -221,7 +208,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 * @return boolean Returns true if the player is added, returns false if the player can't be added.
 	 */
 	public boolean addPlayer(int type, String name, int color, String a) {
-		if (gameState==STATE_NEW_GAME ) { // && !name.equals("neutral") && !(color==Color.gray)
+		if (gameState==GameState.STATE_NEW_GAME ) { // && !name.equals("neutral") && !(color==Color.gray)
 
 			for (int c=0; c< Players.size() ; c++) {
 				if (( name.equals(((Player)Players.elementAt(c)).getName() )) || (color ==  ((Player)Players.elementAt(c)).getColor() )) return false;
@@ -241,7 +228,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 * @return boolean Returns true if the player is deleted, returns false if the player cannot be deleted
 	 */
 	public boolean delPlayer(String name) {
-		if (gameState==STATE_NEW_GAME) {
+		if (gameState==GameState.STATE_NEW_GAME) {
 
 			int n=-1;
 
@@ -269,7 +256,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public void startGame(int mode, int card, boolean recycle, boolean threeDice) throws Exception {
 
-		if (gameState==STATE_NEW_GAME) { //  && ((mapfile !=null && cardsfile !=null) || () )
+		if (gameState==GameState.STATE_NEW_GAME) { //  && ((mapfile !=null && cardsfile !=null) || () )
 
 			gameMode=mode;
 			cardMode=card;
@@ -346,7 +333,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 				((Player)Players.elementAt(c)).addArmies(armies);
 			}
 
-			gameState=STATE_PLACE_ARMIES;
+			gameState=GameState.STATE_PLACE_ARMIES;
 			capturedCountry=false;
 			tradeCap=false;
 
@@ -440,7 +427,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public Player endGo() {
 
-		if (gameState==STATE_END_TURN) {
+		if (gameState==GameState.STATE_END_TURN) {
 
 			//System.out.print("go ended\n"); // testing
 
@@ -494,13 +481,13 @@ transient - A keyword in the Java programming language that indicates that a fie
 			}
 
 			if (getSetupDone() && gameMode==2 && currentPlayer.getCapital() == null) { // capital risk setup not finished
-				gameState=STATE_SELECT_CAPITAL;
+				gameState=GameState.STATE_SELECT_CAPITAL;
 			}
 			else if ( canTrade()==false ) { // ie the initial setup has not been compleated or there are no cards that can be traded
-				gameState=STATE_PLACE_ARMIES;
+				gameState=GameState.STATE_PLACE_ARMIES;
 			}
 			else { // there are cards that can be traded
-				gameState=STATE_TRADE_CARDS;
+				gameState=GameState.STATE_TRADE_CARDS;
 			}
 
 			capturedCountry=false;
@@ -525,7 +512,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 * @return int Returns the number of armies gained from the trade, returning 0 if the trade is unsuccessful
 	 */
     public int trade(Card card1, Card card2, Card card3) {
-        if (gameState!=STATE_TRADE_CARDS) return 0;
+        if (gameState!=GameState.STATE_TRADE_CARDS) return 0;
 
         if (tradeCap && currentPlayer.getCards().size() < MAX_CARDS )
             throw new RuntimeException("trying to do a trade when less then 5 cards and tradeCap is on");
@@ -551,7 +538,7 @@ transient - A keyword in the Java programming language that indicates that a fie
         // if tradeCap you must trade to redude your cards to 4 or fewer cards
         // but once your hand is reduced to 4, 3 or 2 cards, you must stop trading
         if ( !canTrade() || (tradeCap && currentPlayer.getCards().size() < MAX_CARDS ) ) {
-            gameState=STATE_PLACE_ARMIES;
+            gameState=GameState.STATE_PLACE_ARMIES;
             tradeCap=false;
         }
 
@@ -761,7 +748,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public boolean endTrade() {
             if (canEndTrade()) {
-                gameState=STATE_PLACE_ARMIES;
+                gameState=GameState.STATE_PLACE_ARMIES;
                 if (tradeCap) {
                     throw new RuntimeException("endTrade worked when tradeCap was true");
                 }
@@ -771,7 +758,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	}
 
         public boolean canEndTrade() {
-		if (gameState==STATE_TRADE_CARDS) {
+		if (gameState==GameState.STATE_TRADE_CARDS) {
                         //in italian rules there isn't a limit to the number of risk cards that you can hold in your hand.
 			if (cardMode == CARD_ITALIANLIKE_SET || currentPlayer.getCards().size() < MAX_CARDS) {
 				return true;
@@ -790,7 +777,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 		int done=0;
 
-		if ( gameState==STATE_PLACE_ARMIES ) {
+		if ( gameState==GameState.STATE_PLACE_ARMIES ) {
 
 			if ( !getSetupDone() ) { // ie the initial setup has not been compleated
 				if (n != 1) return 0;
@@ -835,8 +822,8 @@ transient - A keyword in the Java programming language that indicates that a fie
 			if (done==1) {
 
 				if (getSetupDone() ) { // ie the initial setup has been compleated
-					if ( currentPlayer.getExtraArmies()==0 ) { gameState=STATE_ATTACKING; }
-					else { gameState=STATE_PLACE_ARMIES; }
+					if ( currentPlayer.getExtraArmies()==0 ) { gameState=GameState.STATE_ATTACKING; }
+					else { gameState=GameState.STATE_PLACE_ARMIES; }
 				}
 				else { // initial setup is not compleated
 					if (currentPlayer.getExtraArmies()==0) {
@@ -844,7 +831,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 					}
 
-					gameState=STATE_END_TURN;
+					gameState=GameState.STATE_END_TURN;
 
 				}
 
@@ -868,7 +855,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 		// find a empty country
 		int nEmpty = -1;
 
-		if (gameState==STATE_PLACE_ARMIES) {
+		if (gameState==GameState.STATE_PLACE_ARMIES) {
 
 			int a = r.nextInt(Countries.length);
 			boolean done = false;
@@ -905,7 +892,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 		boolean result=false;
 
-		if (gameState==STATE_ATTACKING) {
+		if (gameState==GameState.STATE_ATTACKING) {
 
 			if (
 					t1!=null &&
@@ -925,7 +912,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 				attacker=t1;
 				defender=t2;
 				battleRounds = 0;
-				gameState=STATE_ROLLING;
+				gameState=GameState.STATE_ROLLING;
 				//System.out.print("Attacking "+t2.getName()+" ("+t2.getArmies()+") with "+t1.getName()+" ("+t1.getArmies()+").\n"); // testing
 			}
 		}
@@ -938,11 +925,11 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public boolean endAttack() {
 
-		if (gameState==STATE_ATTACKING) { // if we were in the attack phase
+		if (gameState==GameState.STATE_ATTACKING) { // if we were in the attack phase
 
 			// YURA:TODO check if there are any countries with more then 1 amy, maybe even check that a move can be made
 
-			gameState=STATE_FORTIFYING; // go to move phase
+			gameState=GameState.STATE_FORTIFYING; // go to move phase
 			//System.out.print("Attack phase ended\n");
 			return true;
 		}
@@ -956,7 +943,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public boolean rollA(int dice1) {
 
-		if (gameState==STATE_ROLLING) { // if we were in the attacking phase
+		if (gameState==GameState.STATE_ROLLING) { // if we were in the attacking phase
 
 			if ( attacker.getArmies() > 4 ) {
 				if (dice1<=0 || dice1>3) return false;
@@ -970,7 +957,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 			// System.out.print("NUMBER OF DICE: " + dice1 + " or " + attackerDice.length + "\n");
 
 			currentPlayer=defender.getOwner();
-			gameState=STATE_DEFEND_YOURSELF;
+			gameState=GameState.STATE_DEFEND_YOURSELF;
 			return true;
 
 		}
@@ -980,7 +967,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 	public boolean rollD(int dice2) {
 
-		if (gameState==STATE_DEFEND_YOURSELF) { // if we were in the defending phase
+		if (gameState==GameState.STATE_DEFEND_YOURSELF) { // if we were in the defending phase
 
 			if ( defender.getArmies() > maxDefendDice ) {
 				if (dice2<=0 || dice2>maxDefendDice) return false;
@@ -1032,7 +1019,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 		result[4]=0; // min move
 		result[5]=0; // max move
 
-		if (gameState==STATE_DEFEND_YOURSELF) { // if we were in the defending phase
+		if (gameState==GameState.STATE_DEFEND_YOURSELF) { // if we were in the defending phase
 			battleRounds++;
 
                         for (int aResult:attackerResults) {
@@ -1077,7 +1064,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 				defender.setOwner( (Player)attacker.getOwner() );
 				result[3]=1;
-				gameState=STATE_BATTLE_WON;
+				gameState=GameState.STATE_BATTLE_WON;
 				mustmove=attackerResults.length;
 
 				result[4]=mustmove;
@@ -1100,7 +1087,7 @@ transient - A keyword in the Java programming language that indicates that a fie
                                         // in italian rules there is no limit to the number of cards you can hold
                                         // if winning the other players cards gives you 6 or more cards you must immediately trade
 					if ( cardMode!=CARD_ITALIANLIKE_SET && currentPlayer.getCards().size() > MAX_CARDS) {
-						// gameState=STATE_BATTLE_WON;
+						// gameState=GameState.STATE_BATTLE_WON;
 						tradeCap=true;
 					}
 
@@ -1108,11 +1095,11 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 			}
 			else if (attacker.getArmies() == 1) {
-				gameState=STATE_ATTACKING;
+				gameState=GameState.STATE_ATTACKING;
 				//System.out.print("Retreating (FORCED)\n");
 				currentPlayer.currentStatistic.addRetreat();
 			}
-			else { gameState=STATE_ROLLING; }
+			else { gameState=GameState.STATE_ROLLING; }
 
 			defenderDice = 0;
 			attackerDice = 0;
@@ -1130,12 +1117,12 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public int moveArmies(int noa) {
 
-		if (gameState==STATE_BATTLE_WON && mustmove>0 && noa>= mustmove && noa<attacker.getArmies() ) {
+		if (gameState==GameState.STATE_BATTLE_WON && mustmove>0 && noa>= mustmove && noa<attacker.getArmies() ) {
 
 			attacker.removeArmies(noa);
 			defender.addArmies(noa);
 
-			gameState=tradeCap?STATE_TRADE_CARDS:STATE_ATTACKING;
+			gameState=tradeCap?GameState.STATE_TRADE_CARDS:GameState.STATE_ATTACKING;
 
 			attacker=null;
 			defender=null;
@@ -1152,7 +1139,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public int moveAll() {
 
-		if (gameState==STATE_BATTLE_WON && mustmove>0) {
+		if (gameState==GameState.STATE_BATTLE_WON && mustmove>0) {
 
 			return attacker.getArmies() - 1;
 
@@ -1171,11 +1158,11 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public boolean retreat() {
 
-		if (gameState==STATE_ROLLING) { // if we were in the attacking phase
+		if (gameState==GameState.STATE_ROLLING) { // if we were in the attacking phase
 
 			currentPlayer.currentStatistic.addRetreat();
 
-			gameState=STATE_ATTACKING; // go to attack phase
+			gameState=GameState.STATE_ATTACKING; // go to attack phase
 			//System.out.print("Retreating\n");
 
 			attacker=null;
@@ -1194,7 +1181,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 * @return boolean Returns true if the tactical move is allowed, returns false if the tactical move is not allowed
 	 */
 	public boolean moveArmy(Country t1, Country t2, int noa) {
-		if (gameState==STATE_FORTIFYING) {
+		if (gameState==GameState.STATE_FORTIFYING) {
 
 			// do they exist //check if they belong to the player //check if they are neighbours //check if there are enough troops in country1
 			if (
@@ -1210,7 +1197,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 				t1.removeArmies(noa);
 				t2.addArmies(noa);
-				gameState=STATE_END_TURN;
+				gameState=GameState.STATE_END_TURN;
 
 				checkPlayerWon();
 
@@ -1229,8 +1216,8 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public boolean noMove() {
 
-		if (gameState==STATE_FORTIFYING) { // if we were in the move phase
-			gameState=STATE_END_TURN; // go to end phase
+		if (gameState==GameState.STATE_FORTIFYING) { // if we were in the move phase
+			gameState=GameState.STATE_END_TURN; // go to end phase
 
 			//System.out.print("No Move.\n"); // testing
 			return true;
@@ -1310,7 +1297,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 */
 	public boolean setCapital(Country c) {
 
-		if (gameState== STATE_SELECT_CAPITAL && gameMode == 2 && c.getOwner()==currentPlayer && currentPlayer.getCapital()==null) {
+		if (gameState== GameState.STATE_SELECT_CAPITAL && gameMode == 2 && c.getOwner()==currentPlayer && currentPlayer.getCapital()==null) {
 
 			currentPlayer.setCapital(c);
 
@@ -1323,7 +1310,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 
 			}
 
-			gameState=STATE_END_TURN;
+			gameState=GameState.STATE_END_TURN;
 
 			return true;
 
@@ -1460,7 +1447,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 		}
 
 		if (result==true) {
-			gameState=STATE_GAME_OVER;
+			gameState=GameState.STATE_GAME_OVER;
 		}
 
 		return result;
@@ -1489,7 +1476,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 
         public boolean canContinue() {
 
-		if (gameState==STATE_GAME_OVER && gameMode != MODE_DOMINATION && gameMode != 1) {
+		if (gameState==GameState.STATE_GAME_OVER && gameMode != MODE_DOMINATION && gameMode != 1) {
 
 			int oldGameMode=gameMode;
 			gameMode=MODE_DOMINATION;
@@ -1509,9 +1496,9 @@ transient - A keyword in the Java programming language that indicates that a fie
 
                         gameMode=MODE_DOMINATION;
 
-			if (tradeCap==true) { gameState=STATE_TRADE_CARDS; }
-			else if ( currentPlayer.getExtraArmies()==0 ) { gameState=STATE_ATTACKING; }
-			else { gameState=STATE_PLACE_ARMIES; }
+			if (tradeCap==true) { gameState=GameState.STATE_TRADE_CARDS; }
+			else if ( currentPlayer.getExtraArmies()==0 ) { gameState=GameState.STATE_ATTACKING; }
+			else { gameState=GameState.STATE_PLACE_ARMIES; }
 
 			return true;
 
@@ -2237,7 +2224,7 @@ transient - A keyword in the Java programming language that indicates that a fie
 	 * Gets the state of the game
 	 * @return int Returns the game state
 	 */
-	public int getState() {
+	public GameState getState() {
 		return gameState;
 	}
 
@@ -2812,7 +2799,7 @@ System.out.print(str+"]\n");
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
     	in.defaultReadObject();
     	this.r = new Random();
-    	if (this.mapfile != null && gameState!=STATE_NEW_GAME) {
+    	if (this.mapfile != null && gameState!=GameState.STATE_NEW_GAME) {
             try {
                     loadMap(false, null);
             }
