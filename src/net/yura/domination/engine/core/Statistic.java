@@ -21,6 +21,10 @@ public class Statistic implements Serializable {
     public Statistic() {
 	statistics = new int[13];
     }
+    
+    public void incrementStatistic(StatType stat, final int incrementBy) {
+    	statistics[stat.ordinal()] += incrementBy;
+    }
 
     // at the end of a persons go this gets called
     public void endGoStatistics(int countries, int armies, int continents, int conectedEmpire, int cards) {
