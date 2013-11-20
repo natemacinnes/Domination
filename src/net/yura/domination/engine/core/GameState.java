@@ -1,7 +1,6 @@
 package net.yura.domination.engine.core;
 
 public enum GameState {
-
 	STATE_NEW_GAME
 	,STATE_TRADE_CARDS
 	,STATE_PLACE_ARMIES
